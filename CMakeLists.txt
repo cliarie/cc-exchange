@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(Exchange VERSION 1.0.0)
 
-# Add color support to our messages.
+# Add color support to messages.
 # See: https://stackoverflow.com/questions/18968979/how-to-get-colorized-output-with-cmake
 if(NOT WIN32)
   string(ASCII 27 Esc)
@@ -89,12 +89,3 @@ foreach(entrypoint IN LISTS assignment_entrypoints)
     add_executable(${entrypoint} ${entry_dir}/${entrypoint}.cpp)
     target_link_libraries(${entrypoint} PRIVATE libs src)
 endforeach()
-
-
-
-#target_link_directories(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/include)
-
-#target_link_libraries(test PRIVATE Catch2::Catch2WithMain libs src)
-
-
-
