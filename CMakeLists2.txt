@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.10)
+project("New Exchange")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# list(APPEND
+#       FOLDERS
+#       # 20240122_stl
+#       # 20240124_complete_search
+#       # 20240126_divide_and_conquer
+#       # 20240129_basic_graphs
+#       20240131_binary_search_trees
+#       scratch)
+#
+# foreach(folder IN LISTS FOLDERS)
+#   add_subdirectory(${folder})
+# endforeach()
+
+file(GLOB_RECURSE SOURCE_FILES "${PROJECT_SOURCE_DIR}/*/*.cpp")
+add_library(exchange_files ${SOURCE_FILES})
+add_executable(orderentry orderentry.cpp)
+target_link_libraries(orderentry exchange_files)
