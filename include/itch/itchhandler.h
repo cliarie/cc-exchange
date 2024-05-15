@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <cstring>
+#include <vector>
 
 /*
 Nasdaq ITCH Protocol
@@ -250,4 +251,59 @@ struct NOII
     char current_reference_price;
     char cross_type;
     char price_variation_indicator;
+};
+
+struct UnknownMessage
+{
+    char message_type;
+};
+
+/*
+Parse ITCH messages
+*/
+class ITCHHandler
+{
+public:
+    ITCHHandler() { reset(); };
+    ITCHHandler(const ITCHHandler &) = delete;
+    ITCHHandler(ITCHHandler &&) = delete;
+    virtual ~ITCHHandler() = default;
+
+    ITCHHandler &operator=(const ITCHHandler &) = delete;
+    ITCHHandler &operator=(ITCHHandler &&) = delete;
+
+    // Process all messages from ITCH buffer
+    bool handle(void *buffer, std::size_t length);
+
+    // Process message from ITCH buffer
+    bool handle_message(void *buffer, std::size_t length);
+
+    // Reset ITCH Handler
+    void reset();
+
+private:
+    size_t length;
+    std::vector<uint8_t> buffer;
+
+    bool handle_system_event_message(void *buffer, std::size_t length);
+    bool handle_stock_directory_message(void *buffer, std::size_t length);
+    bool handle_stock_trading_action_message(void *buffer, std::size_t length);
+    bool handle_reg_sho_message(void *buffer, std::size_t length);
+    bool handle_market_participant_position_message(void *buffer, std::size_t length);
+    bool handle_mwcb_decline_message(void *buffer, std::size_t length);
+    bool handle_mwcb_status_message(void *buffer, std::size_t length);
+    bool handle_ipo_quoting_message(void *buffer, std::size_t length);
+    bool handle_luld_message(void *buffer, std::size_t length);
+    bool handle_add_order_message(void *buffer, std::size_t length);
+    bool handle_add_order_mpid_attribution_message(void *buffer, std::size_t length);
+    bool handle_order_executed_message(void *buffer, std::size_t length);
+    bool handle_order_executed_with_price_message(void *buffer, std::size_t length);
+    bool handle_order_cancel_message(void *buffer, std::size_t length);
+    bool handle_order_delete_message(void *buffer, std::size_t length);
+    bool handle_order_replace_message(void *buffer, std::size_t length);
+    bool handle_trade_message(void *buffer, std::size_t length);
+    bool handle_cross_trade_message(void *buffer, std::size_t length);
+    bool handle_broken_trade_message(void *buffer, std::size_t length);
+    bool handle_noii_message(void *buffer, std::size_t length);
+    bool handle_unknown_message(void *buffer, std::size_t length);
 };
