@@ -2,6 +2,40 @@
 
 bool ITCHHandler::handle(void *buffer, size_t length)
 {
+    uint8_t *data = static_cast<uint8_t *>(buffer);
+    size_t offset = 0;
+
+    while (offset < length)
+    {
+        // handle message length: if no message length, read it
+        if (this->length == 0)
+        {
+            // if
+            if ((this->buffer.empty()) && length - offset <= 2 || this->buffer.size() == 1)
+            {
+                this->buffer.push_back(data[offset++]);
+                this->length += length - offset;
+                return true;
+            }
+
+            this->length = (data[offset] << 8) | data[offset + 1];
+            offset += 2;
+        }
+
+        // read message
+        if (length - offset < this->length)
+        {
+            this->buffer.insert(this->buffer.end(), data + offset, data + length);
+            this->length += length - offset;
+            return true;
+        }
+
+        if (!handle_message(data + offset, this->length))
+            return false;
+
+        offset += this->length;
+        this->length = 0;
+    }
 }
 
 bool ITCHHandler::handle_message(void *buffer, size_t length)
